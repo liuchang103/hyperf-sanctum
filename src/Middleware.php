@@ -50,7 +50,7 @@ class Middleware implements MiddlewareInterface
         }
         
         // 未认证的
-        return $this->unauthenticated($request);
+        return $this->unauthenticated();
     }
     
     // 开始验证

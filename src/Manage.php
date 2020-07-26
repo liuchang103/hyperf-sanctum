@@ -31,11 +31,10 @@ class Manage
     {
         $string = '';
 
-        while (($len = strlen($string)) < $length) {
+        while(($len = strlen($string)) < $length)
+        {
             $size = $length - $len;
-
             $bytes = random_bytes($size);
-
             $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
         }
 
@@ -48,7 +47,8 @@ class Manage
         // 头信息
         $header = $request->getHeaderLine('Authorization', '');
 
-        if (strpos($header, 'Bearer ') === 0) {
+        if(strpos($header, 'Bearer ') === 0)
+        {
             return substr($header, 7);
         }
     }
