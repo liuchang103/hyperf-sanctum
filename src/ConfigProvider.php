@@ -27,6 +27,14 @@ class ConfigProvider
                     ],
                 ],
             ],
+            'publish' => [
+                [
+                    'id' => 'database',
+                    'description' => 'database file.',
+                    'source' => __DIR__ . '/../publish/database.php',
+                    'destination' => BASE_PATH . '/migrations/' . date('Y_m_d_') . mt_rand(1, 99999) . '_sanctum.php',
+                ],
+            ],
         ];
     }
 }
