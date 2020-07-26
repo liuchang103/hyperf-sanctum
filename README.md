@@ -81,7 +81,7 @@ $user->tokenCurrent()->delete();
 
 #### 获取所有Token
 ```
-$user->tokens();
+$user->tokens;
 ```
 
 #### 删除所有Token (登出所有用户)
@@ -123,4 +123,13 @@ if($user && password_verify($password, $user->password))
     // 颁发令牌
     return $user->tokenCreate('user');
 }
+```
+
+#### 同时只允许一人登陆
+```
+// 先撤销所有令牌
+$user->tokens()->delete();
+
+// 颁发令牌
+return $user->tokenCreate('user');
 ```
