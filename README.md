@@ -57,6 +57,11 @@ class Authentication extends \HyperfSanctum\Middleware
 }
 ```
 
+#### 路由放置中间件
+```
+Router::get( '/user', 'App\Controller\IndexController@user', ['middleware' => [App\Middleware\Authentication::class]]);
+```
+
 #### 携带 Token
 只需要在 Header 中携带令牌即可
 ```
@@ -64,6 +69,7 @@ Authorization: Bearer {token}
 ```
 
 #### 获取前当认证模型
+通过中间件即可
 ```
 $user = \HyperfSanctum\Manage::user();
 ```
