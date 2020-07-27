@@ -47,12 +47,10 @@ class Authentication extends \HyperfSanctum\Middleware
     // 未通过验证
     protected function unauthenticated()
     {
-        return $this->response->json(
-            [
-                'code' => -1,
-                'message' => 'Unauthenticated',
-            ]
-        );
+        return $this->response->json([
+            'code' => -1,
+            'message' => 'Unauthenticated'
+        ]);
     }
 }
 ```
