@@ -35,8 +35,8 @@ tokenCreate(名称, [权限名]) 会返回 hash 过的 token.
 ```
 $user = User::find(1);
         
-$user->tokenCreate('user-token');
-$user->tokenCreate('user-level-token', ['update']);
+$user->tokenCreate('web-token');
+$user->tokenCreate('api-token', ['update']);
 ```
 
 #### 创建 Middleware
@@ -74,19 +74,37 @@ Authorization: Bearer {token}
 $user = \HyperfSanctum\Manage::user();
 ```
 
+#### 当前认证模型的Token
+```
+$user->tokenCurrent();
+```
+
 #### 删除当前Token (登出)
 ```
+$user->tokenDelete();
+// or
 $user->tokenCurrent()->delete();
 ```
 
-#### 获取所有Token
+#### 获取模型所有Token
 ```
 $user->tokens;
 ```
 
 #### 删除所有Token (登出所有用户)
 ```
+$user->tokenFlush();
+// or
 $user->tokens()->delete();
+```
+
+#### 同时只允许一人登陆
+```
+// 先撤销所有令牌
+$user->tokenFlush();
+
+// 颁发令牌
+return $user->tokenCreate('web-token');
 ```
 
 #### 验证当前用户权限
@@ -101,6 +119,69 @@ if($user->tokenCan('update')) {
 $user->tokenAbilities(['update', 'delete']);
 ```
 
+#### 获取当前Token名称
+```
+$name = $user->tokenName();
+```
+
+#### 验证Token名称
+```
+if($user->tokenNameHas('api-token')) {
+
+}
+```
+
+#### 登陆验证用户
+组件中自带帐号密码验证方式，只需要传对应字段即可
+```
+// 默认方式
+$user = User::tokenLogin([
+    'username' => 'user',
+    'password' => '123456'
+]);
+
+// 附加字段，用户状态正常
+$user = User::tokenLogin([
+    'username' => 'user',
+    'password' => '123456',
+    'status'   => 1
+]);
+
+// 颁发令牌
+if($user) {
+    return $user->tokenCreate('web-token');
+}
+```
+
+#### 自定义密码字段
+默认密码字段为 password，自定义可在模型中重写 tokenLoginPassword 方法返回字段名
+```
+class User extends Model
+{
+    use \HyperfSanctum\Tokens;
+
+    public function tokenLoginPassword()
+    {
+        return 'pass';
+    }
+}
+```
+
+#### 自定义密码验证方式
+默认密码验证方式为 password_verify()，可在模型中覆盖验证方式即可
+```
+class User extends Model
+{
+    use \HyperfSanctum\Tokens;
+
+    // input 为用户输入, original 为原数据
+    public function tokenLoginVerify($input, $original)
+    {
+        return md5($input) == $original;
+    }
+}
+```
+
 ## 建议
 #### 密码加密
 ```
@@ -108,28 +189,4 @@ User::create([
     'username' => 'user',
     'password' => password_hash('123456', PASSWORD_DEFAULT);
 ]);
-```
-
-#### 登陆验证 并 颁发令牌
-```
-$username = 'user';
-$password = '123456';
-
-$user = User::where('username', $username)->first();
-
-// 验证密码
-if($user && password_verify($password, $user->password))
-{
-    // 颁发令牌
-    return $user->tokenCreate('user');
-}
-```
-
-#### 同时只允许一人登陆
-```
-// 先撤销所有令牌
-$user->tokens()->delete();
-
-// 颁发令牌
-return $user->tokenCreate('user');
 ```
