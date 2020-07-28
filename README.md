@@ -172,10 +172,10 @@ class User extends Model
 {
     use \HyperfSanctum\Tokens;
 
-    // input 为用户输入, original 为原数据
-    public function tokenLoginVerify($input, $original)
+    // input 为用户输入, origin 为原数据
+    public function tokenLoginVerify($input, $origin)
     {
-        return md5($input) == $original;
+        return md5($input) == $origin;
     }
 }
 ```

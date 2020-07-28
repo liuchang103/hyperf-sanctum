@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace HyperfSanctum;
 
+use Hyperf\Utils\Str;
+
 trait Tokens
 {
     // 当前 token 模型
@@ -32,7 +34,7 @@ trait Tokens
     {
         $this->tokens()->create([
             'name' => $name,
-            'token' => hash('sha256', $token = Manage::buildToken()),
+            'token' => hash('sha256', $token = Str::random(80)),
             'abilities' => $abilities,
         ]);
         
@@ -113,8 +115,8 @@ trait Tokens
     }
 
     // 验证方式
-    public function tokenLoginVerify($input, $original)
+    public function tokenLoginVerify($input, $origin)
     {
-        return password_verify($input, $original);
+        return password_verify($input, $origin);
     }
 }

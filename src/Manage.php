@@ -26,21 +26,6 @@ class Manage
         }
     }
     
-    // 生成 token 令牌
-    public static function buildToken($length = 80)
-    {
-        $string = '';
-
-        while(($len = strlen($string)) < $length)
-        {
-            $size = $length - $len;
-            $bytes = random_bytes($size);
-            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
-        }
-
-        return $string;
-    }
-    
     // 从 request 中获取 token
     public static function requestToken(ServerRequestInterface $request)
     {
