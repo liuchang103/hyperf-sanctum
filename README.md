@@ -40,16 +40,16 @@ $user->tokenCreate('api-token', ['update']);
 ```
 
 #### 创建 Middleware
-只需要继承 HyperfSanctum\Middleware 并实现 unauthenticated 方法即可
+只需要继承 HyperfSanctum\Middleware 并实现 failedLogin 方法即可
 ```
 class Authentication extends \HyperfSanctum\Middleware
 {
     // 未通过验证
-    protected function unauthenticated()
+    protected function failedLogin()
     {
         return $this->response->json([
             'code' => -1,
-            'message' => 'Unauthenticated'
+            'message' => 'error'
         ]);
     }
 }

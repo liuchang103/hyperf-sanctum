@@ -47,7 +47,53 @@ class Model extends BaseModel
     // 查询权限
     public function can($ability)
     {
-        return in_array('*', $this->abilities) || array_key_exists($ability, array_flip($this->abilities));
+        var_dump($ability);
+        return in_array('*', $this->abilities) || in_array($ability, $this->abilities);
+    }
+
+    // 查询权限 And
+    public function canAnd($data)
+    {
+        foreach((array) $data as $ability)
+        {
+            // 有一项未通过将错误
+            if(!$this->can($ability))
+            {
+                return false;
+            }
+        }
+
+        return (bool) $data;
+    }
+
+    // 查询权限 Or
+    public function canOr($data)
+    {
+        foreach((array) $data as $ability)
+        {
+            // 有一项通过将成功
+            if($this->can($ability))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // 验证名称 or
+    public function nameOr($data)
+    {
+        foreach((array) $data as $name)
+        {
+            // 有一项通过将成功
+            if($this->name == $name)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
     
     // 更新权限

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace HyperfSanctum;
 
 use Hyperf\Utils\Context;
-use Psr\Http\Message\ServerRequestInterface;
 
 class Manage
 {
@@ -14,27 +13,19 @@ class Manage
     {
         return Context::get('sanctum');
     }
-    
-    // 保存上下文
-    public static function contextToken($token)
-    {
-        // 相关用户是否存在
-        if($token->tokenable)
-        {
-            // 写入关联模型和协程中
-            return Context::set('sanctum', $token->tokenable->tokenWith($token));
-        }
-    }
-    
-    // 从 request 中获取 token
-    public static function requestToken(ServerRequestInterface $request)
-    {
-        // 头信息
-        $header = $request->getHeaderLine('Authorization', '');
 
-        if(strpos($header, 'Bearer ') === 0)
+    // 认证
+    public static function auth($token)
+    {
+        // 获取令牌模型 并 检查相关模型存在
+        if($token = Model::findToken($token))
         {
-            return substr($header, 7);
+            // 相关用户是否存在
+            if($token->tokenable)
+            {
+                // 写入关联模型和协程中
+                return Context::set('sanctum', $token->tokenable->tokenWith($token));
+            }
         }
     }
 
@@ -61,7 +52,23 @@ class Manage
                 return $model;
             }
         }
+    }
 
-        return false;
+    // 注解权限认证
+    public static function annotation(Route $route)
+    {
+        // Token模型
+        $token = static::user()->tokenCurrent();
+
+        // 从注解收集器中取中
+        $data = Annotation::get($route->callback()) ?? Annotation::get($route->controller());
+
+        // 没有注解，放行
+        if(!$data) return true;
+
+        // 验证
+        return $token->canAnd($data['and'] ?? []) ||
+            $token->canOr($data['or'] ?? []) ||
+            $token->nameOr($data['name'] ?? []);
     }
 }

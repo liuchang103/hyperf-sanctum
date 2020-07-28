@@ -39,32 +39,36 @@ class Middleware implements MiddlewareInterface
     
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // 放入请求
+        $requestManage = new Request($request);
+
         // 检查 token 令牌
-        if($token = Manage::requestToken($request))
+        if($token = $requestManage->token())
         {
             // 开始认证
-            if($this->authentication($token))
+            if(Manage::auth($token))
             {
+                // 注解权限检查
+                if(!Manage::annotation($requestManage->route()))
+                {
+                    return $this->unauthenticated();
+                }
+
                 return $handler->handle($request); 
             }
         }
         
-        // 未认证的
-        return $this->unauthenticated();
+        // 未登陆
+        return $this->failedLogin();
     }
-    
-    // 开始验证
-    protected function authentication($token)
+
+    // 登陆失败
+    protected function failedLogin()
     {
-        // 获取令牌模型 并 检查相关模型存在
-        if($token = Model::findToken($token))
-        {
-            // 保存用户到上下文中
-            return Manage::contextToken($token);
-        }
+
     }
     
-    // 未通过验证
+    // 无权限
     protected function unauthenticated()
     {
 
