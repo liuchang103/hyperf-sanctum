@@ -37,12 +37,11 @@ class Annotation
     protected static function annotation()
     {
         static::controller(Can::class, 'and');
-        static::method(Can::class, 'and');
-
         static::controller(Can::class, 'or');
-        static::method(CanOr::class, 'or');
-
         static::controller(CanName::class, 'name');
+
+        static::method(Can::class, 'and');
+        static::method(CanOr::class, 'or');
         static::method(CanName::class, 'name');
     }
 
