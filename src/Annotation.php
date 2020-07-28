@@ -36,17 +36,17 @@ class Annotation
     // 收集注解
     protected static function annotation()
     {
-        static::controller(Can::class, 'and');
-        static::controller(Can::class, 'or');
-        static::controller(CanName::class, 'name');
+        static::controller(Can::class);
+        static::controller(CanOr::class);
+        static::controller(CanName::class);
 
-        static::method(Can::class, 'and');
-        static::method(CanOr::class, 'or');
-        static::method(CanName::class, 'name');
+        static::method(Can::class);
+        static::method(CanOr::class);
+        static::method(CanName::class);
     }
 
     // 收集控制器类
-    protected static function controller($class, $name)
+    protected static function controller($class)
     {
         $annotation = AnnotationCollector::getClassByAnnotation($class);
 
@@ -58,12 +58,12 @@ class Annotation
                 static::$callback[$controller] = [];
             }
 
-            static::$callback[$controller][$name] = (array) $annotation->name;
+            static::$callback[$controller][$class] = (array) $annotation->name;
         }
     }
 
     // 收集方法类
-    protected static function method($class, $name)
+    protected static function method($class)
     {
         $annotation = AnnotationCollector::getMethodByAnnotation($class);
 
@@ -79,13 +79,13 @@ class Annotation
             }
 
             // 空数据
-            if(!isset(static::$callback[$callback][$name]))
+            if(!isset(static::$callback[$callback][$class]))
             {
-                static::$callback[$callback][$name] = [];
+                static::$callback[$callback][$class] = [];
             }
             
             // 合并控制器数据
-            static::$callback[$callback][$name] = array_merge(static::$callback[$callback][$name], (array) $item['annotation']->name);
+            static::$callback[$callback][$class] = array_merge(static::$callback[$callback][$class], (array) $item['annotation']->name);
         }
     }
 }

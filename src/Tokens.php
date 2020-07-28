@@ -18,15 +18,37 @@ trait Tokens
     }
 
     // 查询权限
-    public function tokenCan(string $ability)
+    public function tokenCan($ability)
     {
         return $this->tokenCurrent() ? $this->tokenCurrent()->can($ability) : false;
     }
+
+    // 查询权限
+    public function tokenCanOr($ability)
+    {
+        return $this->tokenCurrent() ? $this->tokenCurrent()->canOr($ability) : false;
+    }
     
     // 更新 token 权限
-    public function tokenAbilities(array $abilities = ['*'])
+    public function tokenAbilities(array $abilities = null)
     {
-        return $this->tokenCurrent() ? $this->tokenCurrent()->setAbilities($abilities) : false;
+        if($this->tokenCurrent())
+        {
+            if($abilities)
+            {
+                return $this->tokenCurrent()->setAbilities($abilities);
+            }
+            
+            return $this->tokenCurrent()->abilities;
+        }
+    }
+
+    // 追加 token 权限
+    public function tokenAbilitiesAppend($abilities)
+    {
+        return $this->tokenCurrent() ? $this->tokenCurrent()->setAbilities(
+            array_merge($this->tokenAbilities(), (array) $abilities)
+        ) : false;
     }
 
     // token 创建
@@ -62,7 +84,7 @@ trait Tokens
     // 判断 token name
     public function tokenNameHas($name)
     {
-        return $this->tokenName() == $name;
+        return $this->tokenCurrent() ? $this->tokenCurrent()->nameHas($name) : false;
     }
 
     // 当前 token

@@ -47,23 +47,20 @@ class Model extends BaseModel
     // 查询权限
     public function can($ability)
     {
-        var_dump($ability);
-        return in_array('*', $this->abilities) || in_array($ability, $this->abilities);
-    }
-
-    // 查询权限 And
-    public function canAnd($data)
-    {
-        foreach((array) $data as $ability)
+        // 所有权
+        if(!in_array('*', $this->abilities))
         {
-            // 有一项未通过将错误
-            if(!$this->can($ability))
+            foreach((array) $ability as $item)
             {
-                return false;
+                // 有一项未通过将错误
+                if(!in_array($item, $this->abilities))
+                {
+                    return false;
+                }
             }
         }
 
-        return (bool) $data;
+        return true;
     }
 
     // 查询权限 Or
@@ -81,8 +78,8 @@ class Model extends BaseModel
         return false;
     }
 
-    // 验证名称 or
-    public function nameOr($data)
+    // 验证名称
+    public function nameHas($data)
     {
         foreach((array) $data as $name)
         {

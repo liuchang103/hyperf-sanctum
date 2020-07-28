@@ -67,8 +67,8 @@ class Manage
         if(!$data) return true;
 
         // 验证
-        return $token->canAnd($data['and'] ?? []) ||
-            $token->canOr($data['or'] ?? []) ||
-            $token->nameOr($data['name'] ?? []);
+        return $token->can($data[Annotation\Can::class] ?? []) ||
+            $token->canOr($data[Annotation\CanOr::class] ?? []) ||
+            $token->nameHas($data[Annotation\CanName::class] ?? []);
     }
 }
