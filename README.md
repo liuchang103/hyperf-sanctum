@@ -183,10 +183,10 @@ return $user->tokenCreate('web-token');
 if($user->tokenCan('update'))
 
 // 满足多个权限
-if($user->tokenCan(['update', 'delete'))
+if($user->tokenCan(['update', 'delete'])
 
 // 满足其中一个
-if($user->tokenCanOr(['update', 'delete'))
+if($user->tokenCanOr(['update', 'delete'])
 ```
 #### 获取当前用户权限
 ```
@@ -395,23 +395,19 @@ class Authentication extends \HyperfSanctum\Middleware
     // 未登陆成功
     protected function failedLogin()
     {
-        return $this->response->json(
-            [
-                'code' => -1,
-                'message' => 'failedLogin',
-            ]
-        );
+        return $this->response->json([
+            'code' => -1,
+            'message' => 'failedLogin',
+        ]);
     }
     
     // 未通过权限验证
     protected function unauthenticated()
     {
-        return $this->response->json(
-            [
-                'code' => -2,
-                'message' => 'Unauthenticated',
-            ]
-        );
+        return $this->response->json([
+            'code' => -2,
+            'message' => 'Unauthenticated',
+        ]);
     }
 }
 ```
