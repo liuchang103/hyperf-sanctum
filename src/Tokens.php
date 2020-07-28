@@ -82,30 +82,7 @@ trait Tokens
     // 登陆验证
     public static function tokenLogin(array $data)
     {
-        $model = new static;
-
-        $where = [];
-
-        foreach($data as $name => $value)
-        {
-            // 放弃验证字段
-            if($name <> $model->tokenLoginPassword())
-            {
-                $where[] = [$name, $value];
-            }
-        }
-
-        // 模型查询
-        if($model = $model->where($where)->first())
-        {
-            // 验证密码
-            if($model->tokenLoginVerify($data[$model->tokenLoginPassword()], $model->{$model->tokenLoginPassword()}))
-            {
-                return $model;
-            }
-        }
-
-        return false;
+        return Manage::login(new static, $data);
     }
 
     // 验证字段

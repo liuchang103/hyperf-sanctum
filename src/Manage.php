@@ -37,4 +37,31 @@ class Manage
             return substr($header, 7);
         }
     }
+
+    // 登陆验证
+    public static function login($model, array $data)
+    {
+        $where = [];
+
+        foreach($data as $name => $value)
+        {
+            // 不加入条件字段
+            if($name <> $model->tokenLoginPassword())
+            {
+                $where[] = [$name, $value];
+            }
+        }
+
+        // 模型查询
+        if($model = $model->where($where)->first())
+        {
+            // 验证密码
+            if($model->tokenLoginVerify($data[$model->tokenLoginPassword()], $model->{$model->tokenLoginPassword()}))
+            {
+                return $model;
+            }
+        }
+
+        return false;
+    }
 }
