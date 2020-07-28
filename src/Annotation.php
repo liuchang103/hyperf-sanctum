@@ -36,21 +36,21 @@ class Annotation
     // 收集注解
     protected static function annotation()
     {
-        static::annotationHandle(Can::class, 'and');
-        static::annotationHandle(CanOr::class, 'or');
-        static::annotationHandle(CanName::class, 'name');
-    }
+        static::controller(Can::class, 'and');
+        static::method(Can::class, 'and');
 
-    // 收集方式
-    protected static function annotationHandle($class, $name)
-    {
-        static::controller(AnnotationCollector::getClassByAnnotation($class), $name);
-        static::method(AnnotationCollector::getMethodByAnnotation($class), $name);
+        static::controller(Can::class, 'or');
+        static::method(CanOr::class, 'or');
+
+        static::controller(CanName::class, 'name');
+        static::method(CanName::class, 'name');
     }
 
     // 收集控制器类
-    protected static function controller($annotation, $name)
+    protected static function controller($class, $name)
     {
+        $annotation = AnnotationCollector::getClassByAnnotation($class);
+
         foreach($annotation as $controller => $annotation)
         {
             // 组合数组
@@ -64,8 +64,10 @@ class Annotation
     }
 
     // 收集方法类
-    protected static function method($annotation, $name)
+    protected static function method($class, $name)
     {
+        $annotation = AnnotationCollector::getMethodByAnnotation($class);
+
         foreach($annotation as $item)
         {
             // 取出完整名
