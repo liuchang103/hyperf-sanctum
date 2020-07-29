@@ -63,8 +63,8 @@ class Model extends BaseModel
         return true;
     }
 
-    // 查询权限 Or
-    public function canOr($data)
+    // 查询权限 白名单
+    public function canWhite($data)
     {
         foreach((array) $data as $ability)
         {
@@ -79,7 +79,7 @@ class Model extends BaseModel
     }
 
     // 验证名称
-    public function nameHas($data)
+    public function nameCard($data)
     {
         foreach((array) $data as $name)
         {

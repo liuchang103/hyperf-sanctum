@@ -6,10 +6,6 @@ namespace HyperfSanctum;
 
 use Hyperf\Di\Annotation\AnnotationCollector;
 
-use HyperfSanctum\Annotation\Can;
-use HyperfSanctum\Annotation\CanOr;
-use HyperfSanctum\Annotation\CanName;
-
 // 注解处理器
 class Annotation
 {
@@ -36,13 +32,13 @@ class Annotation
     // 收集注解
     protected static function annotation()
     {
-        static::controller(Can::class);
-        static::controller(CanOr::class);
-        static::controller(CanName::class);
+        static::controller(Annotation\Can::class);
+        static::controller(Annotation\CanWhite::class);
+        static::controller(Annotation\CanCard::class);
 
-        static::method(Can::class);
-        static::method(CanOr::class);
-        static::method(CanName::class);
+        static::method(Annotation\Can::class);
+        static::method(Annotation\CanWhite::class);
+        static::method(Annotation\CanCard::class);
     }
 
     // 收集控制器类

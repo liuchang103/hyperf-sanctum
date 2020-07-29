@@ -10,7 +10,7 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
  * @Annotation
  * @Target({"CLASS", "METHOD"})
  */
-class CanName extends AbstractAnnotation
+class CanWhite extends AbstractAnnotation
 {
     public $name;
 

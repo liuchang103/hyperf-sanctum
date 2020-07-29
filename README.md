@@ -185,8 +185,8 @@ if($user->tokenCan('update'))
 // 满足多个权限
 if($user->tokenCan(['update', 'delete'])
 
-// 满足其中一个
-if($user->tokenCanOr(['update', 'delete'])
+// 白名单，满足其中一个
+if($user->tokenCanWhite(['update', 'delete'])
 ```
 #### 获取当前用户权限
 ```
@@ -206,12 +206,12 @@ $user->tokenAbilitiesAppend(['delete']);
 $name = $user->tokenName();
 ```
 
-#### 验证Token名称
+#### 验证Token身份证
 ```
-if($user->tokenNameHas('api-token'))
+if($user->tokenNameCard('api-token'))
 
 // 满足其中一个
-if($user->tokenNameHas(['api-token', 'admin-token']))
+if($user->tokenNameCard(['api-token', 'admin-token']))
 ```
 
 ## 注解
@@ -241,19 +241,19 @@ public function delete()
  * @Can({"delete", "list"})
  */
 ```
-满足其中一个权限（注意，CanOr 不会与 Can 合并）
+白单名，满足其中一个权限（注意，不会与 Can 合并）
 ```
-use HyperfSanctum\Annotation\CanOr;
+use HyperfSanctum\Annotation\CanWhite;
 
 /**
- * @CanOr({"delete", "create"})
+ * @CanWhite({"delete", "create"})
  */
 ```
 ##### 进阶：叠加使用
 ```
 /**
  * @Can({"update", "admin"})
- * @CanOr({"delete", "create"})
+ * @CanWhite({"delete", "create"})
  */
 ```
 + 权限为 update，admin -> 通过
@@ -267,7 +267,7 @@ use HyperfSanctum\Annotation\CanOr;
 /**
  * @Middleware(\App\Middleware\Authentication::class)
  * @Can("admin")
- * @CanOr("boss")
+ * @CanWhite("boss")
  */
 class AdminController
 {
@@ -280,7 +280,7 @@ class AdminController
 
     /**
      * @Can("tongji")
-     * @CanOr("guest")
+     * @CanWhite("guest")
      */
     public function tongji()
 }
@@ -302,34 +302,34 @@ class AdminController
 + 权限为 boss -> 通过
 + 权限为 guest -> 通过
 
-#### 名称验证
-在创建 token 时会创建名称，用此来验证大局
+#### 身份验证
+在创建 token 时会创建身份名称，可用此来验证
 ```
-use HyperfSanctum\Annotation\CanName;
+use HyperfSanctum\Annotation\CanCard;
 
 /**
  * @Middleware(\App\Middleware\Authentication::class)
- * @CanName("api-token")
+ * @CanCard("api-token")
  */
 class ApiController
 ```
 满足其它中一名称
 ```
 /**
- * @CanName({"api-token", "api"})
+ * @CanCard({"api-token", "api"})
  */
 ```
 类与方法合并注解
 ```
 /**
- * @CanName({"api-token", "api"})
+ * @CanCard({"api-token", "api"})
  */
 class ApiController
 {
     public function index()
 
     /**
-     * @CanName("web-token")
+     * @CanCard("web-token")
      */
     public function web()
 }
@@ -343,8 +343,8 @@ class ApiController
 /**
  * @Middleware(\App\Middleware\Authentication::class)
  * @Can({"admin:index", "admin:create", "admin:tongji"})
- * @CanOr({"admin", "manage"})
- * @CanName({"boss", "landlady"})
+ * @CanWhite({"admin", "manage"})
+ * @CanCard({"boss", "landlady"})
  */
 class AdminController
 {
@@ -357,7 +357,7 @@ class AdminController
 
     /**
      * @Can("tongji")
-     * @CanName("guest")
+     * @CanCard("guest")
      */
     public function tongji()
 }

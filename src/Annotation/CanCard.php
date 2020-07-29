@@ -10,7 +10,7 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
  * @Annotation
  * @Target({"CLASS", "METHOD"})
  */
-class CanOr extends AbstractAnnotation
+class CanCard extends AbstractAnnotation
 {
     public $name;
 

@@ -24,9 +24,9 @@ trait Tokens
     }
 
     // 查询权限
-    public function tokenCanOr($ability)
+    public function tokenCanWhite($ability)
     {
-        return $this->tokenCurrent() ? $this->tokenCurrent()->canOr($ability) : false;
+        return $this->tokenCurrent() ? $this->tokenCurrent()->canWhite($ability) : false;
     }
     
     // 更新 token 权限
@@ -82,9 +82,9 @@ trait Tokens
     }
 
     // 判断 token name
-    public function tokenNameHas($name)
+    public function tokenNameCard($name)
     {
-        return $this->tokenCurrent() ? $this->tokenCurrent()->nameHas($name) : false;
+        return $this->tokenCurrent() ? $this->tokenCurrent()->nameCard($name) : false;
     }
 
     // 当前 token

@@ -68,7 +68,7 @@ class Manage
 
         // 验证
         return $token->can($data[Annotation\Can::class] ?? []) ||
-            $token->canOr($data[Annotation\CanOr::class] ?? []) ||
-            $token->nameHas($data[Annotation\CanName::class] ?? []);
+            $token->canWhite($data[Annotation\CanWhite::class] ?? []) ||
+            $token->nameCard($data[Annotation\CanCard::class] ?? []);
     }
 }
